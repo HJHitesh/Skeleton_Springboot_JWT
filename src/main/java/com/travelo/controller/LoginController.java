@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.travelo.config.AuthService;
-import com.travelo.dto.APIResponse;
+
+import com.travelo.dto.ApiResponse;
 import com.travelo.dto.AuthenticationRequest;
 
 
@@ -20,7 +21,7 @@ public class LoginController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<APIResponse> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+    public ResponseEntity<ApiResponse> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
     	System.out.println("Data in login");
     	return authService.login(authenticationRequest);
     }

@@ -1,6 +1,6 @@
 package com.travelo.config;
 
-import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -8,19 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
-import org.springframework.http.ResponseEntity.HeadersBuilder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-import com.travelo.dto.APIResponse;
+import com.travelo.dto.ApiResponse;
 import com.travelo.dto.AuthenticationRequest;
 import com.travelo.model.User;
 import com.travelo.repository.UserRepository;
@@ -38,10 +36,13 @@ public class AuthService implements UserDetailsService {
 	@Autowired
 	private JwtUtil jwtUtil;
 
-	public ResponseEntity<APIResponse> login(AuthenticationRequest authenticationRequest) throws Exception {
+	public ResponseEntity<ApiResponse> login(AuthenticationRequest authenticationRequest) throws Exception {
 
-		APIResponse apiResponse = new APIResponse();
+		ApiResponse apiResponse = new ApiResponse();
 		try {
+		
+			System.out.println("Received password: " + authenticationRequest.getPassword());
+			
 		// Authenticate the username and password
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 				authenticationRequest.getUsername(), authenticationRequest.getPassword()));
@@ -49,16 +50,28 @@ public class AuthService implements UserDetailsService {
 		// Load the user and generate the JWT token
 		final UserDetails userDetails = loadUserByUsername(authenticationRequest.getUsername());
 
-		
-			apiResponse.setData(Arrays.asList(jwtUtil.generateToken((User) userDetails)));
-			apiResponse.setMessage(HttpStatus.ACCEPTED.toString());
+			apiResponse.setStatus("success");
+			apiResponse.setMessage("Login successful");
+			apiResponse.setError(null);
+			
+			String username = userDetails.getUsername();
+		    Set<String> roles = userDetails.getAuthorities().stream()
+		                                  .map(GrantedAuthority::getAuthority)
+		                                  .collect(Collectors.toSet());
 
+			
+			String token = jwtUtil.generateToken(username, roles); 
+			
+			apiResponse.setData(Map.of("token", token));
+	
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse);
 		} catch (Exception e) {
-
-			apiResponse.setData(Arrays.asList(String.valueOf(HttpStatus.UNAUTHORIZED.value())));
-			apiResponse.setMessage(HttpStatus.UNAUTHORIZED.toString());
-
+			
+			apiResponse.setStatus("error");
+			apiResponse.setMessage("Unauthorized access. Please check your credentials");
+			apiResponse.setError(new ApiResponse.ErrorDetails("401", "Unauthorized"));
+			apiResponse.setData(null);
+	
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
 
 		}

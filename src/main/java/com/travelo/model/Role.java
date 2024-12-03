@@ -14,7 +14,7 @@ public class Role {
     @Column(name = "role_name", unique = true, nullable = false)
     private String roleName;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> authorities; // Assuming this contains permissions
 
     public Role() {
