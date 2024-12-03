@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Spring Boot application
+  travelo-app:
+    build: .
+    container_name: travelo-app
+    ports:
+      - "8081:8081"  # Expose port 8081 for your Spring Boot application
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/Travelo  # MySQL service name
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""  # Empty password for MySQL
+    depends_on:
+      - mysql-db  # Ensure that MySQL starts before Spring Boot
+
+  # MySQL database
+  mysql-db:
+    image: mysql:8.0  # Official MySQL Docker image
+    container_name: mysql-db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"  # Allow empty password for root user
+      MYSQL_DATABASE: Travelo  # Create the Travelo database
+    ports:
+      - "3306:3306"  # Expose MySQL port for external access
+    volumes:
+      - mysql-data:/var/lib/mysql  # Persist MySQL data between container restarts
+
+# Volumes to persist MySQL data
+volumes:
+  mysql-data:
+    driver: local

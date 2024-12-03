@@ -25,7 +25,7 @@ public class PackageController {
 	@Autowired
 	private PackagesRepository packagesRepository;
 
-	@PreAuthorize("hasRole('ADMIN')")
+	
 	@RequestMapping("/hello")
 	public String helloFromTravelo() {
 		return "Hello Travelo";

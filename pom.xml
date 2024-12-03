@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.travelo</groupId>
 	<artifactId>Travelo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<!--<version>0.0.1-SNAPSHOT</version>-->
 	<name>Travelo</name>
 	<description>Travel Web Application</description>
 	<url />
@@ -100,6 +100,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<finalName>Travelo</finalName> <!-- Custom name for the JAR -->
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
