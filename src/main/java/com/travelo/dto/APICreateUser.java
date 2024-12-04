@@ -6,6 +6,8 @@ public class APICreateUser {
 	
     String username;
     String password;
+    
+    
 	public String getUsername() {
 		return username;
 	}

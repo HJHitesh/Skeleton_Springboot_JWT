@@ -37,7 +37,7 @@ public class Packages {
     private String flightDetails;
 
     @Column(name = "package_price")
-    private String packagePrice;
+    private Double packagePrice;
 
     // Getters and Setters
 
@@ -113,12 +113,12 @@ public class Packages {
         this.flightDetails = flightDetails;
     }
 
-    public String getPackagePrice() {
-        return packagePrice;
-    }
+	public Double getPackagePrice() {
+		return packagePrice;
+	}
 
-    public void setPackagePrice(String packagePrice) {
-        this.packagePrice = packagePrice;
-    }
+	public void setPackagePrice(Double packagePrice) {
+		this.packagePrice = packagePrice;
+	}
 }
 

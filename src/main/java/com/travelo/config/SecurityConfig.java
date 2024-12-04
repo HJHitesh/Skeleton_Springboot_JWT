@@ -43,6 +43,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/login").permitAll() 
                 .requestMatchers("/api/users/create").permitAll()// Allow access to /authenticate endpoint
+                .requestMatchers("/api/packages/**	").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/api/admin/**").hasRole("ADMIN") 
                 .anyRequest().authenticated()  // All other requests require authentication
             )
             .sessionManagement(session -> session
