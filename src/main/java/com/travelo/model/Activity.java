@@ -31,7 +31,7 @@ public class Activity {
 //	This maintains
 //	the integrity
 //	of the relationship.
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY )
 	@JoinColumn(name = "package_id", nullable = false)
 	@JsonIgnore // @concept - Prevents infinite loops or unintended data loading.
 	private Packages packageDetails;

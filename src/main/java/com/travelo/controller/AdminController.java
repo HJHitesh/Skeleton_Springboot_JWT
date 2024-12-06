@@ -6,7 +6,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.travelo.model.Activity;
 import com.travelo.model.Packages;
+import com.travelo.repository.ActivityRepository;
 import com.travelo.repository.PackagesRepository;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +28,18 @@ public class AdminController {
 
 	@Autowired
 	private PackagesRepository packagesRepository;
+	
+	@Autowired
+	private ActivityRepository activityRepository;
 
 	
 	@RequestMapping("/hello")
 	public String helloFromTravelo() {
 		return "Hello Travelo";
 	}
+	
+	@Autowired
+	private EntityManager entityManager;
 
 	@PostMapping
 	public Packages createPackage(@RequestBody Packages packages) {
@@ -55,11 +65,14 @@ public class AdminController {
 	@GetMapping
 	public ResponseEntity<List<Packages>> getAllPackages() {
 		List<Packages> packagesList = packagesRepository.findAll();
-		
-		return Optional.of(packagesList)
-				.filter(list -> !list.isEmpty())
-				.map(ResponseEntity :: ok)
-				.orElseGet(()-> ResponseEntity.noContent().build());
+
+	    // Refresh entities to ensure up-to-date data
+	  //  packagesList.forEach(entityManager::refresh);
+
+	    return Optional.of(packagesList)
+	            .filter(list -> !list.isEmpty())
+	            .map(ResponseEntity::ok)
+	            .orElseGet(() -> ResponseEntity.noContent().build());
 	}
 
 	@GetMapping("/{id}")
@@ -68,40 +81,44 @@ public class AdminController {
 		return packageDetails.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
+	@Transactional
 	@PostMapping("/{id}")
 	public ResponseEntity<Packages> updatePackage(@PathVariable Long id, @RequestBody Packages packageDetails) {
 	    Optional<Packages> optionalPackage = packagesRepository.findById(id);
-	    if (optionalPackage.isPresent()) {
-	        Packages existingPackage = optionalPackage.get();
-
-	        // Update the package details
-	        existingPackage.setPackageName(packageDetails.getPackageName());
-	        existingPackage.setPackageDuration(packageDetails.getPackageDuration());
-	        existingPackage.setStayDetails(packageDetails.getStayDetails());
-	        existingPackage.setCountry(packageDetails.getCountry());
-	        existingPackage.setFlightDetails(packageDetails.getFlightDetails());
-	        existingPackage.setPackagePrice(packageDetails.getPackagePrice());
-	        existingPackage.setPackageImage(packageDetails.getPackageImage());
-
-	        // Override all existing activities with new ones from the request
-	        List<Activity> newActivities = packageDetails.getActivities();
-	        
-	        // Ensure the activities list is associated with the package
-	        for (Activity activity : newActivities) {
-	            activity.setPackageDetails(packageDetails);//Ensure each activity is linked to this package
-	        }
-
-	        // Set the new activities to the package
-	        existingPackage.setActivities(newActivities);
-
-	        // Save the updated package with the new activities
-	        packagesRepository.save(existingPackage);
-	        
-	        return ResponseEntity.ok(existingPackage);
-	    } else {
+	    if (optionalPackage.isEmpty()) {
 	        return ResponseEntity.notFound().build();
 	    }
+
+	    Packages existingPackage = optionalPackage.get();
+
+	    // Update package details
+	    existingPackage.setPackageName(packageDetails.getPackageName());
+	    existingPackage.setPackageDuration(packageDetails.getPackageDuration());
+	    existingPackage.setStayDetails(packageDetails.getStayDetails());
+	    existingPackage.setCountry(packageDetails.getCountry());
+	    existingPackage.setFlightDetails(packageDetails.getFlightDetails());
+	    existingPackage.setPackagePrice(packageDetails.getPackagePrice());
+	    existingPackage.setPackageImage(packageDetails.getPackageImage());
+
+	    // Clear and add activities
+	    existingPackage.getActivities().clear();
+	    for (Activity newActivity : packageDetails.getActivities()) {
+	        newActivity.setPackageDetails(existingPackage); // Set bidirectional relationship
+	        existingPackage.getActivities().add(newActivity);
+	    }
+
+	    // Save updated package
+	    packagesRepository.save(existingPackage);
+
+	    // Optional: Clear persistence context
+	    entityManager.flush();
+	    entityManager.clear();
+
+	    return ResponseEntity.ok(existingPackage);
 	}
+
+
+
 
 
 	@DeleteMapping("/{id}")
