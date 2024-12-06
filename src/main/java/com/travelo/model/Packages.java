@@ -15,7 +15,7 @@ public class Packages {
     private String packageImage;
 
     //@concept - Owning Side and Inverse Side: JPA
-    @OneToMany(mappedBy = "packageDetails",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "packageDetails",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Activity> activities;
 
     @Column(name = "package_id", unique = true)

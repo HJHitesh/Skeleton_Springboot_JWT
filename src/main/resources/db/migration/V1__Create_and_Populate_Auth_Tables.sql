@@ -33,7 +33,7 @@ INSERT INTO roles (role_name) VALUES ('ROLE_USER');
 INSERT INTO roles (role_name) VALUES ('ROLE_ADMIN');
 
 -- Insert initial data into 'users' table
-INSERT INTO users (username, password) VALUES ('john_doe', 'password123');
+INSERT INTO users (username, password) VALUES ('hitesh', 'password123');
 INSERT INTO users (username, password) VALUES ('admin_user', 'adminpass');
 
 -- Insert initial data into 'user_roles' table
@@ -43,7 +43,7 @@ VALUES
     ((SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM roles WHERE role_name = 'ROLE_ADMIN'));
 
 -- Optional: Insert initial data into 'role_authorities' table
-INSERT INTO role_authorities (role_id, authority)
+INSERT INTO role_authorities (role_id, authorities)
 VALUES 
     ((SELECT id FROM roles WHERE role_name = 'ROLE_USER'), 'READ_PRIVILEGES'),
     ((SELECT id FROM roles WHERE role_name = 'ROLE_USER'), 'WRITE_PRIVILEGES'),
