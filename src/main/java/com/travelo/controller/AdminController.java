@@ -83,14 +83,20 @@ public class AdminController {
 	        existingPackage.setPackagePrice(packageDetails.getPackagePrice());
 	        existingPackage.setPackageImage(packageDetails.getPackageImage());
 
-	        // Link the activities back to this package
-	        for (Activity activity : packageDetails.getActivities()) {
-	            activity.setPackageDetails(existingPackage);  
+	        // Override all existing activities with new ones from the request
+	        List<Activity> newActivities = packageDetails.getActivities();
+	        
+	        // Ensure the activities list is associated with the package
+	        for (Activity activity : newActivities) {
+	            activity.setPackageDetails(packageDetails);//Ensure each activity is linked to this package
 	        }
 
-	        existingPackage.setActivities(packageDetails.getActivities());
+	        // Set the new activities to the package
+	        existingPackage.setActivities(newActivities);
 
+	        // Save the updated package with the new activities
 	        packagesRepository.save(existingPackage);
+	        
 	        return ResponseEntity.ok(existingPackage);
 	    } else {
 	        return ResponseEntity.notFound().build();
