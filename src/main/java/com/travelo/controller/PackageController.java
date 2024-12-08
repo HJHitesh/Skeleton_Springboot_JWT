@@ -9,10 +9,12 @@ import com.travelo.repository.BookingRepository;
 import com.travelo.repository.PackagesRepository;
 import com.travelo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/packages")
@@ -55,6 +57,19 @@ public class PackageController {
         // Save the booking
         return bookingRepository.save(booking);
     }
+    
+    @GetMapping
+	public ResponseEntity<List<Packages>> getAllPackages() {
+		List<Packages> packagesList = packageRepository.findAll();
+
+	    // Refresh entities to ensure up-to-date data
+	  //  packagesList.forEach(entityManager::refresh);
+
+	    return Optional.of(packagesList)
+	            .filter(list -> !list.isEmpty())
+	            .map(ResponseEntity::ok)
+	            .orElseGet(() -> ResponseEntity.noContent().build());
+	}
 
     // Get package details by ID
     @GetMapping("/{id}")
