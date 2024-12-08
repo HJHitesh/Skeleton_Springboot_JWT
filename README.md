@@ -190,12 +190,13 @@ This project is licensed under the MIT License - see the `LICENSE.md` file for d
 
 ### User Interface
 ![User Login Page](https://github.com/HJHitesh/Skeleton_Springboot_JWT/blob/master/src/main/resources/static/images/Login_user.png)
-![Package Listing](<Add screenshot here>)
-![Shopping Cart](<Add screenshot here>)
-![Booking Page](<Add screenshot here>)
+![Home Page ](https://github.com/HJHitesh/Skeleton_Springboot_JWT/blob/master/src/main/resources/static/images/Home.png)
+![Login Success](https://github.com/HJHitesh/Skeleton_Springboot_JWT/blob/master/src/main/resources/static/images/login_sucess.png)
+![Booking Package](https://github.com/HJHitesh/Skeleton_Springboot_JWT/blob/master/src/main/resources/static/images/Bookpackage.png)
+![Cart page](https://github.com/HJHitesh/Skeleton_Springboot_JWT/blob/master/src/main/resources/static/images/Cart.png)
 
 ### Admin Interface
-![Admin Login](<Add screenshot here>)
-![Create Package](<Add screenshot here>)
-![Manage Packages](<Add screenshot here>)
-![Booking Management](<Add screenshot here>)
+![Admin Login](https://github.com/HJHitesh/Skeleton_Springboot_JWT/blob/master/src/main/resources/static/images/Admin_login.png)
+![Create Package](https://github.com/HJHitesh/Skeleton_Springboot_JWT/blob/master/src/main/resources/static/images/Admin_Create%20package.png)
+![Edit & Delete Package](https://github.com/HJHitesh/Skeleton_Springboot_JWT/blob/master/src/main/resources/static/images/Admin_Edit_delete_package.png)
+![Update & Modify Package](https://github.com/HJHitesh/Skeleton_Springboot_JWT/blob/master/src/main/resources/static/images/Modify_package.png)
