@@ -2,10 +2,15 @@
 
 A full-stack travel booking platform built using React, Spring Boot, and MySQL. This application allows users to browse travel packages, make bookings, and includes an admin panel for package management.
 
+## Team Members
+- Neel
+- Abdul
+- Hitesh
+
 ## Features
 
 ### User Features
-- User Registration and Login
+- User Registration and Login with JWT Authentication
 - Browse Available Travel Packages
 - View Package Details
 - Add Packages to Cart
@@ -13,7 +18,7 @@ A full-stack travel booking platform built using React, Spring Boot, and MySQL. 
 - View Booking History
 
 ### Admin Features
-- Secure Admin Login
+- Secure Admin Login with JWT Authentication
 - Create New Travel Packages
 - Edit Existing Packages
 - Delete Packages
@@ -30,9 +35,10 @@ A full-stack travel booking platform built using React, Spring Boot, and MySQL. 
 
 ### Backend
 - Spring Boot
-- Spring Security
+- Spring Security with JWT Authentication
 - Spring Data JPA
 - MySQL Database
+- BCrypt Password Encryption
 
 ## Prerequisites
 
@@ -81,7 +87,47 @@ Before running this application, make sure you have the following installed:
    ```bash
    npm start
    ```
-   The frontend application will start on `http://localhost:3000`
+   The frontend application will start on `http://localhost:5173`
+
+## Security Configuration
+
+The application uses JWT (JSON Web Token) for authentication and authorization:
+
+### JWT Implementation
+- Token-based authentication for all secured endpoints
+- Stateless session management
+- BCrypt password encoding
+- Role-based access control (USER and ADMIN roles)
+
+### CORS Configuration
+- Frontend Origin: `http://localhost:5173`
+- Allowed Methods: GET, POST, PUT, DELETE, PATCH
+- Allowed Headers: All
+- Credentials: Allowed
+
+## API Endpoints
+
+### Public Endpoints (No Authentication Required)
+- `POST /api/login` - User/Admin authentication
+- `POST /api/users/create` - User registration
+
+### Protected Endpoints (User & Admin Access)
+- `GET /api/packages/**` - Package related operations
+  - View all packages
+  - View package details
+  - Search packages
+
+### Admin-Only Endpoints (Requires ADMIN Role)
+- `POST /api/admin/**` - Admin operations
+  - Manage packages
+  - Manage users
+  - View bookings
+
+### Authentication Flow
+1. User/Admin sends credentials to `/api/login`
+2. Server validates and returns JWT token
+3. Client includes JWT token in Authorization header for subsequent requests
+4. Server validates token through `JwtRequestFilter`
 
 ## Project Structure
 
@@ -105,6 +151,9 @@ travel-booking/
     │   ├── main/
     │   │   ├── java/
     │   │   │   └── com/travelbooking/
+    │   │   │       ├── config/
+    │   │   │       │   ├── SecurityConfig.java
+    │   │   │       │   └── JwtRequestFilter.java
     │   │   │       ├── controllers/
     │   │   │       ├── models/
     │   │   │       ├── repositories/
@@ -129,20 +178,6 @@ travel-booking/
    - Edit/Delete Packages `/admin/manage-packages`
    - Booking Management `/admin/bookings`
 
-## API Endpoints
-
-### User APIs
-- `POST /api/auth/login` - User login
-- `GET /api/packages` - Get all packages
-- `GET /api/packages/{id}` - Get package details
-- `POST /api/bookings` - Create booking
-
-### Admin APIs
-- `POST /api/admin/auth/login` - Admin login
-- `POST /api/admin/packages` - Create package
-- `PUT /api/admin/packages/{id}` - Update package
-- `DELETE /api/admin/packages/{id}` - Delete package
-
 ## Contributing
 
 Please read `CONTRIBUTING.md` for details on our code of conduct and the process for submitting pull requests.
@@ -150,3 +185,17 @@ Please read `CONTRIBUTING.md` for details on our code of conduct and the process
 ## License
 
 This project is licensed under the MIT License - see the `LICENSE.md` file for details
+
+## Screenshots
+
+### User Interface
+![User Login Page](https://github.com/HJHitesh/Skeleton_Springboot_JWT/blob/master/src/main/resources/static/images/Login_user.png)
+![Package Listing](<Add screenshot here>)
+![Shopping Cart](<Add screenshot here>)
+![Booking Page](<Add screenshot here>)
+
+### Admin Interface
+![Admin Login](<Add screenshot here>)
+![Create Package](<Add screenshot here>)
+![Manage Packages](<Add screenshot here>)
+![Booking Management](<Add screenshot here>)
